@@ -88,7 +88,7 @@ void loop() {
     if (msg[0] == COLOR_MESSAGE_START || msg[0] == MODE_MESSAGE_START) {
       atByte++;
     } 
-    // reset if the message starts doesn't start with a valid start character
+    // reset if the message doesn't start with a valid character
     else {
       resetStream();
     }
