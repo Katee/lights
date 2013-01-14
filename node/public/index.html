@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lights</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="/jquery-mobile/jquery.mobile-1.2.0.min.css">
+    <link rel="stylesheet" href="/all.css">
+    <script src="/jquery-1.8.3.js"></script>
+    <script src="/jquery-mobile/jquery.mobile-1.2.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/all.js"></script>
+  </head>
+  <body>
+    <div id="main" class="container">
+      <div id="mode" data-role="navbar">
+        <ul>
+          <li><a href="">Hues</a></li>
+          <li><a href="">Rave</a></li>
+          <li><a href="">Alarm</a></li>
+          <li><a href="">Sines</a></li>
+        </ul>
+      </div>
+      <div id="red-slider"><input type="range" name="slider-fill" id="red" value="0" min="0" max="255" data-highlight="true" /></div>
+      <div id="blue-slider"><input type="range" name="slider-fill" id="blue" value="0" min="0" max="255" data-highlight="true" /></div>
+      <div id="green-slider"><input type="range" name="slider-fill" id="green" value="0" min="0" max="255" data-highlight="true" /></div>
+    </div>
+  </body>
+</html>

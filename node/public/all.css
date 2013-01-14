@@ -1,0 +1,18 @@
+#main {
+  text-align: center;
+}
+
+#red, #green, #blue {
+  display: none;
+}
+
+div.ui-slider {
+  margin: 40px 0 0;
+}
+
+#red-slider .ui-slider-bg { background: #ef2929; }
+#red-slider .ui-slider-handle { background: #ef2929; }
+#green-slider .ui-slider-bg { background: #8ae234; }
+#green-slider .ui-slider-handle { background: #8ae234; }
+#blue-slider .ui-slider-bg { background: #729fcf; }
+#blue-slider .ui-slider-handle { background: #729fcf; }
