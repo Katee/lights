@@ -25,8 +25,7 @@ int stepTime = 200;
 // which program to run
 void (*stepProgram)(int, int[]);
 
-int rgb[3] = {
-  0,0,0};
+int rgb[3] = {0,0,0};
 
 void setup() {
   pinMode(RED, OUTPUT);
@@ -160,7 +159,7 @@ void makeItSo(int rgb[]) {
   analogWrite(GREEN, rgb[1]);
   analogWrite(BLUE, rgb[2]);
 }
- 
+
 void printColor(int rgb[]) {
   Serial.print("rgb(");
   Serial.print(rgb[0]);
@@ -232,9 +231,7 @@ void rgbToHsl(int r, int g, int b, int* hsl){
   hsl[2] = (int)l * 255;
 }
 
-
-void hslToRgb(int _h, int _sl, int _l, int* rgb)
-{
+void hslToRgb(int _h, int _sl, int _l, int* rgb) {
   double h = (double)_h / 255;
   double sl = (double)_sl / 255;
   double l = (double)_l / 255;
@@ -244,8 +241,7 @@ void hslToRgb(int _h, int _sl, int _l, int* rgb)
   g = l;
   b = l;
   v = (l <= 0.5) ? (l * (1.0 + sl)) : (l + sl - l * sl);
-  if (v > 0)
-  {
+  if (v > 0) {
     double m;
     double sv;
     int sextant;
@@ -259,65 +255,41 @@ void hslToRgb(int _h, int _sl, int _l, int* rgb)
     vsf = v * sv * fract;
     mid1 = m + vsf;
     mid2 = v - vsf;
-    switch (sextant)
-    {
-    case 0:
-      r = v;
-      g = mid1;
-      b = m;
-      break;
-    case 1:
-      r = mid2;
-      g = v;
-      b = m;
-      break;
-    case 2:
-      r = m;
-      g = v;
-      b = mid1;
-      break;
-    case 3:
-      r = m;
-      g = mid2;
-      b = v;
-      break;
-    case 4:
-      r = mid1;
-      g = m;
-      b = v;
-      break;
-    case 5:
-      r = v;
-      g = m;
-      b = mid2;
-      break;
+    switch (sextant) {
+      case 0:
+        r = v;
+        g = mid1;
+        b = m;
+        break;
+      case 1:
+        r = mid2;
+        g = v;
+        b = m;
+        break;
+      case 2:
+        r = m;
+        g = v;
+        b = mid1;
+        break;
+      case 3:
+        r = m;
+        g = mid2;
+        b = v;
+        break;
+      case 4:
+        r = mid1;
+        g = m;
+        b = v;
+        break;
+      case 5:
+        r = v;
+        g = m;
+        b = mid2;
+        break;
     }
   }
   rgb[0] = (int)(r * 255);
   rgb[1] = (int)(g * 255);
   rgb[2] = (int)(b * 255);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
