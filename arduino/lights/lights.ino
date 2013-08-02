@@ -1,4 +1,4 @@
-#include <math.h> 
+#include <math.h>
 
 // this may be different on your board
 #define RED 3
@@ -6,6 +6,7 @@
 #define BLUE 6
 
 #define MESSAGE_LENGTH 7
+#define BAUD_RATE 115200
 
 // color messages start with a '#'
 const int COLOR_MESSAGE_START = 35;
@@ -22,28 +23,27 @@ int msg[MESSAGE_LENGTH];
 unsigned long currentStep = 0;
 int stepTime = 200;
 
-// which program to run
-void (*stepProgram)(int, int[]);
-
+// rgb color values
 int rgb[3] = {0,0,0};
+
+// the program to run
+void (*stepProgram)(int[]);
 
 void setup() {
   pinMode(RED, OUTPUT);
-  digitalWrite(RED, LOW);
   pinMode(GREEN, OUTPUT);
-  digitalWrite(GREEN, LOW);
   pinMode(BLUE, OUTPUT);
-  digitalWrite(BLUE, LOW);
+  makeItSo(rgb);
 
-  Serial.begin(57600);
+  Serial.begin(BAUD_RATE);
 
   stepProgram = throughTheHues;
 }
 
 void loop() {
-  // if its been long enough show next color
+  // if enough time has passed step the current program and display the color
   if (doStep && millis() - time >= stepTime) {
-    stepProgram(currentStep, rgb);
+    stepProgram(rgb);
     makeItSo(rgb);
     printColor(rgb);
     time = millis();
@@ -87,28 +87,40 @@ void loop() {
     if (msg[0] == COLOR_MESSAGE_START || msg[0] == MODE_MESSAGE_START) {
       atByte++;
     } 
-    // reset if the message doesn't start with a valid character
     else {
+      // reset if the message doesn't start with a valid character
       resetStream();
     }
   }
 }
 
+void rave(int rgb[]) {
+  stepTime = 60;
+  hslToRgb(random(0, 256), 255, 128, rgb);
+}
+
 // go through the hues but flash the opposite hue half the time
-void rave(int currentStep, int rgb[]) {
+void raveOld(int rgb[]) {
   stepTime = 80;
   hslToRgb(currentStep % 255, 255, 128, rgb);
   if (currentStep % 2 == 0) hslToRgb((currentStep + 128) / 255, 255, 128, rgb);
 }
 
+void black(int rgb[]) {
+  stepTime = 100; // could be anything
+  rgb[0] = 0;
+  rgb[1] = 0;
+  rgb[2] = 0;
+}
+
 // gently cycle through the hues
-void throughTheHues(int currentStep, int rgb[]) {
-  stepTime = 200;
+void throughTheHues(int rgb[]) {
+  stepTime = 300;
   hslToRgb(currentStep % 255, 255, 128, rgb);
 }
 
 // pulse only red
-void alarm(int currentStep, int rgb[]) {
+void alarm(int rgb[]) {
   stepTime = 80;
   rgb[0] = 10 + (int)ceil(sinsq(deg2rad(currentStep % 180)) * 245);
   rgb[1] = 0;
@@ -116,7 +128,7 @@ void alarm(int currentStep, int rgb[]) {
 }
 
 // pulse red then green then blue
-void threesins(int currentStep, int rgb[]) {
+void threesins(int rgb[]) {
   stepTime = 50;
   int minval = 0;
   rgb[0] = minval;
@@ -125,20 +137,20 @@ void threesins(int currentStep, int rgb[]) {
 
   int color = currentStep % 540;
   if (color > 360) {
-    color = 2; 
+    color = 2;
   } 
   else if (color > 180) {
-    color = 1; 
+    color = 1;
   } 
   else {
-    color = 0; 
+    color = 0;
   }
 
   rgb[color] = 1 + (int)ceil(sinsq(deg2rad(currentStep % 360)) * 254);
 }
 
 // each color is a sin wave offset evenly from the others
-void threesinsoverlap(int currentStep, int rgb[]) {
+void threesinsoverlap(int rgb[]) {
   stepTime = 100;
   rgb[0] = 1 + (int)ceil(sinsq(deg2rad(currentStep % 360)) * 254);
   rgb[1] = 1 + (int)ceil(sinsq(deg2rad((currentStep % 360) - (2 * (M_PI / 3)))) * 254);
@@ -201,34 +213,6 @@ double deg2rad (double x) {
 
 double sinsq(double x) {
   return sin(x) * sin(x);
-}
-
-void rgbToHsl(int r, int g, int b, int* hsl){
-  r /= 255;
-  g /= 255;
-  b /= 255;
-  int vmax = fmax(fmax(r, g), b);
-  int vmin = fmin(fmin(r, g), b);
-
-  double h = (vmax + vmin) / 2;
-  double s = (vmax + vmin) / 2;
-  double l = (vmax + vmin) / 2;
-
-  if(vmax == vmin){
-    h = s = 0; // achromatic
-  }
-  else{
-    int d = vmax - vmin;
-    s = l > 0.5 ? d / (2 - vmax - vmin) : d / (vmax + vmin);
-    if (vmax == r) h = (g - b) / d + (g < b ? 6 : 0);
-    if (vmax == g) h = (b - r) / d + 2;
-    if (vmax == b) h = (r - g) / d + 4;
-    h /= 6;
-  }
-
-  hsl[0] = (int)h * 255;
-  hsl[1] = (int)s * 255;
-  hsl[2] = (int)l * 255;
 }
 
 void hslToRgb(int _h, int _sl, int _l, int* rgb) {
