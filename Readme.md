@@ -1,6 +1,6 @@
 Lights
 ======
 
-Weekend project to contol rgb strip lighting with a computer/Raspberry pi and Arduino.
+Weekend project to control RGB strip lighting with a Raspberry Pi (or any computer) and an Arduino.
 
-Uses an Arduino as a standalone controller for strip lighting. Also includes nodejs application to display a web interface that comunicate with the Arduino over serial.
+Uses an Arduino as a standalone controller for strip lighting. Also includes Nodejs application to display a web interface that communicates with the Arduino over serial. This means you can control the lighting from anything with a web browser.
